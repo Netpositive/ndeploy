@@ -1,38 +1,113 @@
 # nDeploy
 
-Example: build.properties.dist
+nDeploy is a phing based deploy scrip for php ecosystem, some idea borrowed from http://capifony.org.
+Currently deploy can be started only from a server.
 
-## ndeploy.xml example
+## Basics
 
-Migrating two yii embedded application
+### Currently supported frameworks:
+- Symfony 2.0.x [vendors based]
+- Symfony 2.x [composer based]
+- Symfony 1.4
+- Yii 1.1.x
+
+### Fetures:
+- releases support
+- composer support
+- shared file handling (symlink based)
+- maintenance mode ( http://shiftcommathree.com/articles/make-your-rails-maintenance-page-respond-with-a-503 )
+- adding VCS based hash to files
+- process locking
+
+## Setup
+
+### 1, Dependencies
+
+- Phing http://www.phing.info/
+- VersionControl_Git http://pear.php.net/package/VersionControl_Git
+
+### 2, Install
+
+```
+git clone https://github.com/Netpositive/ndeploy.git
+```
+
+### 3, Init project
+
+```
+phing -f /path/where/you/installed/ndeploy/build.xml
+```
+
+### build.properties example
+
+```
+;-- deploy basedir --
+basedir=/srv/example.org
+
+;-- application --
+application.name=example
+application.framework=symfony2
+application.repositorydir=/srv/example.org/src/example
+application.deploydir=/srv/example.org/current
+application.releasesdir=/srv/example.org/releases
+application.releaseskept=20
+
+;-- scm proprties --
+scm.type=git
+scm.repository=ssh://example@git.example.org/example.git
+scm.branch=stable
+
+;-- shared files --
+shared.files=vendor,app/config/parameters.yml,app/log.app/data
+
+;-- vendor --
+vendor=composer
+vendor.command=update
+
+;-- maintenance --
+maintenance=true
+maintenance.source=app/Resources/maintenance.html
+maintenance.destination=web/maintenance.html
+maintenance.remove=true
+
+;-- hash --
+hash=true
+hash.file=app/config/parameters_assets.yml,app/config/parameters_assets_2.yml
+
+;-- lock --
+lock=true
+lock.file=/srv/example.org/releases/ndeploy-example.lock
+
+;-- ndpeloy build target's basedir --
+ndeploy.basedir=~/src/ndeploy
+```
+
+## Project specific build file
+
+You can include your project specific build file, it will run at the end of the deploy process.
+File name mast be ndeploy.xml
+
+### ndeploy.xml hello word example
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="/usr/share/php5/PEAR/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
 
-<project name="cig.sms-container" default="cig.sms-container.init">
+<project name="cig.sms-container" default="example.project.init">
 
-    <import file="${ndeploy.basedir}/target/ndeploy.framework.yii.xml"/>
-
-    <target name="cig.sms-container.init">
-        <phingcall target="cig.sms-container.migrate" />
+    <target name="project.example.init">
+        <phingcall target="project.example.helloword" />
     </target>
 
-    <target name="cig.sms-container.migrate">
-        <property name="application.framework.extra.migrate" value="true" override="true" />
-
-        <property name="application.framework.extra.migrate.command" value="./app1/protected/yiic" override="true" />
-        <phingcall target="ndeploy.framework.yii.migrate" />
-
-        <property name="application.framework.extra.migrate.command" value="./app2/protected/yiic" override="true" />
-        <phingcall target="ndeploy.framework.yii.migrate" />
+    <target name="project.example.helloword">
+        <echo msg="Hello word!" level="warning" />
+        <!-- Variables like ${basedir}, ${application.name} can be used -->
     </target>
 
 </project>
 ```
 
-## Nice to do
+## TODO
 
-1, Generate change log, like:
-
+1, Generate change log on deploy, like:
   git log --pretty=format:"%h - %an: %s"
