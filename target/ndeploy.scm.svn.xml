@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.scm.svn" description="svn">
+
+    <target name="ndeploy.scm.svn.init">
+        <phingcall target="ndeploy.scm.svn.update" />
+    </target>
+
+    <target name="ndeploy.scm.svn.update">
+        <if>
+            <istrue value="${application.repositorydir.new}" />
+            <then>
+                <echo>New repository, checkout.</echo>
+                <svncheckout repositoryurl="${scm.repository}" todir="${application.repositorydir}"/>
+            </then>
+            <else>
+                <svnupdate todir="${application.repositorydir}" />
+            </else>
+        </if>
+
+        <if>
+            <not>
+                <equals arg1="${scm.branch}" arg2="" />
+            </not>
+            <then>
+                <svnupdate todir="${application.repositorydir}" revision="${scm.branch}"/>
+            </then>
+        </if>
+
+        <svnlastrevision workingcopy="${application.repositorydir}" propertyname="scm.hash"/>
+
+        <phingcall target="ndeploy.scm.release" />
+    </target>
+
+</project>

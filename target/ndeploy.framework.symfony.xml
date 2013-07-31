@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.framework.symfony">
+
+    <property name="application.framework.extra.symfony.command" value="${php.binary} ./symfony" override="false" />
+    <property name="application.framework.extra.assets.publish" value="true" override="false" />
+
+    <target name="ndeploy.framework.symfony.init">
+        <echo level="info" msg="Run symfony specific components." />
+        <phingcall target="ndeploy.framework.symfony.permissions" />
+        <phingcall target="ndeploy.framework.symfony.cache.warmup" />
+        <phingcall target="ndeploy.framework.symfony.migrate" />
+        <phingcall target="ndeploy.framework.symfony.assets.publish" />
+    </target>
+
+    <target name="ndeploy.framework.symfony.permissions">
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} project:permissions" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony.migrate">
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} doctrine:migrate" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony.cache.clean">
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} cc" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony.cache.warmup">
+        <phingcall target="ndeploy.framework.symfony.cache.clean" />
+
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} doctrine:build --model --forms --filters" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony.assets.publish">
+        <if>
+            <istrue value="${application.framework.extra.assets.publish}" />
+            <then>
+                <echo msg="Assets publish." />
+                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} plugin:publish-assets" checkreturn="true" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- symfony framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assets.publish=true${line.separator}" />
+    </target>
+
+</project>

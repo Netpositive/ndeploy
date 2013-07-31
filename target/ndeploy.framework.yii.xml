@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.framework.yii">
+
+    <property name="application.framework.extra.migrate.command" value="./${application.name}/protected/yiic" override="false" />
+
+    <target name="ndeploy.framework.yii.init">
+        <echo level="info" msg="Run yii specific components." />
+        <phingcall target="ndeploy.framework.yii.migrate" />
+    </target>
+
+    <target name="ndeploy.framework.yii.migrate">
+        <if>
+            <istrue value="${application.framework.extra.migrate}"/>
+            <then>
+                <exec dir="${application.deploydir}" command="${php.binary} ${application.framework.extra.migrate.command} migrate new" outputProperty="migration-versions" checkreturn="true" />
+                <if>
+                    <not>
+                        <contains string="${migration-versions}" substring="Your system is up-to-date." />
+                    </not>
+                    <then>
+                        <echo msg="Executing migrations." />
+                        <echo msg="${migration-versions}" />
+                        <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                        <if>
+                            <equals arg1="${migrate}" arg2="y"/>
+                            <then>
+                                <exec dir="${application.deploydir}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
+                            </then>
+                        </if>
+                    </then>
+                    <else>
+                        <echo msg="No migrations to execute."/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+    
+    <target name="ndeploy.framework.yii.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- yii framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.command=${application.framework.extra.migrate.command}${line.separator}" />
+    </target>
+
+</project>

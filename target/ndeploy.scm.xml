@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.scm" description="scm">
+
+    <import file="${ndeploy.basedir}/target/ndeploy.scm.${scm.type}.xml"/>
+
+    <target name="ndeploy.scm.init">
+        <if>
+            <and>
+                <not><equals arg1="${scm.type}" arg2="" /></not>
+            </and>
+            <then>
+                <phingcall target="ndeploy.scm.${scm.type}.init" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.scm.release">
+        <php function="trim" returnProperty="application.deployhash">
+            <param value="${application.name}_${application.deployhash}_${scm.hash}"/>
+        </php>
+
+        <echo>Deploy hash: ${application.deployhash}</echo>
+
+        <phingcall target="ndeploy.base.release" />
+    </target>
+
+    <target name="ndeploy.scm.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- scm proprties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="scm.type=${config.scm.type}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="scm.repository=${config.scm.repository}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";scm.branch=master${line.separator}" />
+    </target>
+
+</project>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.framework">
+
+    <import file="${ndeploy.basedir}/target/ndeploy.framework.symfony2.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.framework.yii.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.framework.symfony.xml"/>
+
+    <property name="application.framework" value="" override="false" />
+    <property name="application.framework.extra.migrate" value="true" override="false" />
+
+    <target name="ndeploy.framework.init">
+        <if>
+            <not>
+                <equals arg1="${application.framework}" arg2="" />
+            </not>
+            <then>
+                <phingcall target="ndeploy.framework.${application.framework}.init" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.config">
+        <if>
+            <not>
+                <equals arg1="${config.application.framework}" arg2="" />
+            </not>
+            <then>
+                <phingcall target="ndeploy.framework.${config.application.framework}.config" />
+
+                <input message="Use framework migrate command " promptChar="?" propertyName="application.framework.extra.migrate" validArgs="true,false" defaultValue="true" />
+                <echo file="${config.propertyFileName}" append="true" message="application.framework.extra.migrate=${application.framework.extra.migrate}${line.separator}" />
+            </then>
+        </if>
+    </target>
+
+</project>

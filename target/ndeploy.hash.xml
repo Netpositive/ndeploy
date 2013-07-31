@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.hash">
+
+    <property name="php.binary" value="/usr/bin/php" override="false" />
+    <property name="composer.binary" value="${ndeploy.basedir}/bin/composer.phar" override="false" />
+
+    <!-- Check src dir -->
+    <target name="ndeploy.hash.init">
+        <if>
+            <and>
+                <equals arg1="${hash}" arg2="true" />
+                <not><equals arg1="${hash.file}" arg2="" /></not>
+            </and>
+            <then>
+                <foreach list="${hash.file}" param="file" target="ndeploy.hash.file" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.hash.file">
+        <reflexive file="${application.deploydir}/${file}">
+            <filterchain>
+                <replacetokens begintoken="##" endtoken="##">
+                    <token key="HASH" value="${application.deployhash}" />
+                </replacetokens>
+            </filterchain>
+        </reflexive>
+    </target>
+
+    <target name="ndeploy.hash.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- hash --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";hash=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";hash.file=${line.separator}" />
+    </target>
+
+</project>

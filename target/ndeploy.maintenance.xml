@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.maintenance" description="Maintenance handling">
+
+    <!--
+
+    ============================================
+     Maintenance module
+    ============================================
+
+    Based:
+
+    http://shiftcommathree.com/articles/make-your-rails-maintenance-page-respond-with-a-503
+    https://github.com/everzet/capifony/blob/master/lib/symfony2/web.rb
+
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+
+        ErrorDocument 503 /maintenance.html
+
+        RewriteCond %{REQUEST_URI} !\.(css|gif|jpg|png|ico|txt|xml|js)$
+        RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
+        RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+        RewriteRule ^.*$ - [redirect=503,last]
+
+        # other rewrite
+        ....
+
+    </IfModule>
+
+    ============================================
+    -->
+
+    <property name="maintenance" value="false" override="false" />
+    <property name="maintenance.source" value="" override="false" />
+    <property name="maintenance.destination" value="" override="false" />
+    <property name="maintenance.remove" value="true" override="false" />
+
+    <target name="ndeploy.maintenance.init" description="Install maintenance.html">
+        <if>
+            <istrue value="${maintenance}" />
+            <then>
+                <echo>Maintenance: on</echo>
+                <phingcall target="ndeploy.maintenance.install" />
+            </then>
+            <else>
+                <echo>Maintenance: off</echo>
+            </else>
+        </if>
+    </target>
+
+    <target name="ndeploy.maintenance.install" description="Install maintenance.html">
+        <if>
+            <istrue value="${maintenance}" />
+            <then>
+                <if>
+                    <available file="${application.releasesdir.current}/${maintenance.source}" followSymlinks="true" />
+                    <then>
+                        <echo msg="Creating symlink to maintenance.html in the current release directory."/>
+                        <symlink target="${application.releasesdir.current}/${maintenance.source}" link="${application.releasesdir.current}/${maintenance.destination}" overwrite="true"/>
+                    </then>
+                    <else>
+                        <echo level="error" msg="File '${application.releasesdir.current}/${maintenance.source}' not found!" />
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.maintenance.remove" description="Remove maintenance.html">
+        <if>
+            <istrue value="${maintenance}" />
+            <then>
+                <if>
+                    <and>
+                        <istrue value="${maintenance.remove}" />
+                        <available file="${application.deploydir}/${maintenance.destination}" type="file" followSymlinks="true" />
+                    </and>
+                    <then>
+                        <echo msg="Removing maintenance file." />
+                        <delete file="${application.deploydir}/${maintenance.destination}"/>
+                    </then>
+                    <else>
+                        <echo msg="Not removing maintenance file."/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.maintenance.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- maintenance --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";maintenance=false${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";maintenance.source=${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";maintenance.destination=${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";maintenance.remove=true${line.separator}" />
+    </target>
+
+</project>

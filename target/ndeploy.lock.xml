@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.lock">
+
+    <property name="lock" value="true" override="false" />
+    <property name="lock.file" value="${application.releasesdir}/ndeploy-${application.name}.lock" override="false" />
+
+    <taskdef classname="LockInitTask" name="lockInit" classpath="${ndeploy.basedir}/class" />
+    <taskdef classname="LockCheckTask" name="lockCheck" classpath="${ndeploy.basedir}/class" />
+    <taskdef classname="LockRemoveTask" name="lockRemove" classpath="${ndeploy.basedir}/class" />
+
+    <target name="ndeploy.lock.init">
+        <if>
+            <istrue value="${lock}"/>
+            <then>
+                <lockInit lockFile="${lock.file}" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.lock.check">
+        <if>
+            <istrue value="${lock}"/>
+            <then>
+                <lockCheck lockFile="${lock.file}" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.lock.remove">
+        <if>
+            <istrue value="${lock}"/>
+            <then>
+                <lockRemove lockFile="${lock.file}" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.lock.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- lock --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";lock=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";lock.file=${line.separator}" />
+    </target>
+
+</project>

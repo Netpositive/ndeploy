@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="build" default="start">
+
+    <!-- include build.properties -->
+    <property name="ndeploy.propertiesfile" value="./build.properties" override="false" />
+    <property file="${ndeploy.propertiesfile}" />
+
+    <!-- run command -->
+    <property name="ndeploy.start.command" value="init" override="false" />
+
+    <!-- import all the targets -->
+    <property name="ndeploy.basedir" value="${phing.dir}" override="false" />
+    <import file="${ndeploy.basedir}/target/ndeploy.base.xml"/>
+
+    <!-- application config -->
+    <property name="basedir" value="${user.home}" override="false" />
+
+    <property name="application.name" value="" override="false" />
+    <property name="application.framework" value="" override="false" />
+    <property name="application.deploydir" value="${basedir}/current" override="false" />
+    <property name="application.releasesdir" value="${basedir}/releases" override="false" />
+    <property name="application.repositorydir" value="${basedir}/src/${application.name}" override="false" />
+    <property name="application.releaseskept" value="100" override="false" />
+
+    <tstamp>
+        <format property="application.deployhash" pattern="%Y%m%d_%H%M%S" />
+    </tstamp>
+
+    <!-- scm config -->
+    <property name="scm.type" value="git" override="false" />
+    <property name="scm.branch" value=""  override="false" />
+    <property name="scm.repository" value="" override="false" />
+
+    <!-- shared config -->
+    <property name="shared.basedir" value="${basedir}/shared" override="false" />
+    <property name="shared.files" value="" />
+
+    <target name="start">
+        <phingcall target="${ndeploy.start.command}" />
+    </target>
+
+    <target name="init">
+        <!-- start -->
+        <tstamp>
+            <format property="ndeploy.timestamp.start" pattern="%Y-%m-%d %H:%M:%S" />
+        </tstamp>
+        <echo message="Deploy started at ${ndeploy.timestamp.start}" level="warning" />
+
+        <!-- init -->
+        <phingcall target="ndeploy.base.init" />
+
+        <!-- end -->
+        <tstamp>
+            <format property="ndeploy.timestamp.end" pattern="%Y-%m-%d %H:%M:%S" />
+        </tstamp>
+        <echo message="Deploy ended at ${ndeploy.timestamp.end}" level="warning" />
+    </target>
+
+    <target name="config">
+        <phingcall target="ndeploy.base.config" />
+    </target>
+
+</project>

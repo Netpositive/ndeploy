@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.framework.symfony2">
+
+    <property name="application.framework.extra.symfony2.command" value="${php.binary} ./app/console" override="false" />
+    <property name="application.framework.extra.assetic.dump" value="true" override="false" />
+
+    <target name="ndeploy.framework.symfony2.init">
+        <echo level="info" msg="Run symfony2 specific components." />
+
+        <phingcall target="ndeploy.framework.symfony2.migrate" />
+        <phingcall target="ndeploy.framework.symfony2.cache.warmup" />
+        <phingcall target="ndeploy.framework.symfony2.assets.install" />
+        <phingcall target="ndeploy.framework.symfony2.assetic.dump" />
+    </target>
+
+    <target name="ndeploy.framework.symfony2.migrate">
+        <if>
+            <istrue value="${application.framework.extra.migrate}"/>
+            <then>
+                <echo msg="Checking doctrine migrations." />
+                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
+                <if>
+                    <contains string="${migration-versions}" substring="not migrated" />
+                    <then>
+                        <echo msg="Executing doctrine migrations." />
+                        <echo msg="${migration-versions}" />
+                        <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                        <if>
+                            <equals arg1="${migrate}" arg2="y"/>
+                            <then>
+                                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                            </then>
+                        </if>
+                    </then>
+                    <else>
+                        <echo msg="No migrations to execute."/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony2.cache.clean">
+        <if>
+            <available file="${application.deploydir}/app/cache" type="dir" followSymlinks="true" />
+            <then>
+                <echo msg="Remove everything from the cache directory." />
+                <exec dir="${application.deploydir}" command="rm -rf app/cache/*" passthru="true" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony2.cache.warmup">
+        <phingcall target="ndeploy.framework.symfony2.cache.clean" />
+
+        <echo msg="Calling symfony's cache clear." />
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} cache:clear --env=prod --no-debug" checkreturn="false" />
+
+        <echo msg="Cache warmup." />
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} cache:warmup --env=prod --no-debug" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony2.assets.install">
+        <echo msg="Installing assets." />
+        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} assets:install --env=prod --no-debug --symlink web" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony2.assetic.dump">
+        <if>
+            <istrue value="${application.framework.extra.assetic.dump}" />
+            <then>
+                <echo msg="Assetic dump." />
+                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} assetic:dump --env=prod --no-debug" checkreturn="true" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony2.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- symfony2 framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assetic.dump=true${line.separator}" />
+    </target>
+
+</project>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.base">
+
+    <property name="php.binary" value="/usr/bin/php" override="false" />
+
+    <import file="${ndeploy.basedir}/target/ndeploy.scm.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.vendor.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.framework.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.maintenance.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.hash.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.lock.xml"/>
+
+    <taskdef classname="KeepReleaseTask" name="keeprelease" classpath="${ndeploy.basedir}/class" />
+
+    <!-- Check src dir -->
+    <target name="ndeploy.base.init">
+        <property name="application.repositorydir.new" value="false" />
+
+        <if>
+            <and>
+                <isset property="application.repositorydir" />
+                <not><equals arg1="${application.repositorydir}" arg2="" /></not>
+            </and>
+            <then>
+                <if>
+                    <not>
+                        <available file="${application.repositorydir}" type="dir" />
+                    </not>
+                    <then>
+                        <mkdir dir="${application.repositorydir}" />
+                        <property name="application.repositorydir.new" value="true" override="true" />
+                    </then>
+                </if>
+            </then>
+            <else>
+                <fail>Applicaiont repository dir (application.repositorydir) is not set.</fail>
+            </else>
+        </if>
+
+        <phingcall target="ndeploy.lock.init" />
+        <phingcall target="ndeploy.lock.check" />
+        <phingcall target="ndeploy.lock.check" />
+        <phingcall target="ndeploy.lock.check" />
+        <phingcall target="ndeploy.scm.init" />
+        <phingcall target="ndeploy.vendor.init" />
+        <phingcall target="ndeploy.hash.init" />
+        <phingcall target="ndeploy.framework.init" />
+        <phingcall target="ndeploy.base.application" />
+        <phingcall target="ndeploy.lock.check" />
+        <phingcall target="ndeploy.maintenance.remove" />
+        <phingcall target="ndeploy.lock.remove" />
+
+    </target>
+
+    <target name="ndeploy.base.release">
+        <property name="application.releasesdir.current" value="${application.releasesdir}/${application.deployhash}" override="true" />
+
+        <echo msg="Copy files from repository dir to current realse dir." />
+        <copy todir="${application.releasesdir.current}" >
+            <fileset dir="${application.repositorydir}">
+                <exclude name="**/.gitignore" />
+                <exclude name="**/.git*" />
+                <exclude name="**/.svn*" />
+            </fileset>
+        </copy>
+
+        <phingcall target="ndeploy.base.shared" />
+        <phingcall target="ndeploy.base.release.clean" />
+        <phingcall target="ndeploy.maintenance.init" />
+
+        <echo msg="Symlink current realse dir to deploydir." />
+        <symlink target="${application.releasesdir.current}" link="${application.deploydir}" overwrite="true"/>
+
+    </target>
+
+    <target name="ndeploy.base.release.clean">
+        <if>
+            <not>
+                <equals arg1="${application.releaseskept" arg2="" />
+            </not>
+            <then>
+                <keeprelease keep="${application.releaseskept}">
+                    <fileset dir="${application.releasesdir}">
+                        <include name="${application.name}_*" />
+                        <type type="dir" />
+                    </fileset>
+                </keeprelease>
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.base.shared">
+        <foreach list="${shared.files}" param="symlink" target="ndeploy.base.shared.file" />
+    </target>
+
+    <target name="ndeploy.base.shared.file">
+        <if>
+            <not>
+                <or>
+                    <available file="${shared.basedir}/${symlink}" type="file" followSymlinks="true" />
+                    <available file="${shared.basedir}/${symlink}" type="dir" followSymlinks="true" />
+                </or>
+            </not>
+            <then>
+                <if>
+                    <contains string="${symlink}" substring="."/>
+                    <then>
+                        <phingcall target="ndeploy.base.file.missing">
+                            <property name="defaultType" value="file" />
+                            <property name="file" value="${shared.basedir}/${symlink}" />
+                        </phingcall>
+                    </then>
+                    <else>
+                        <phingcall target="ndeploy.base.file.missing">
+                            <property name="defaultType" value="dir" />
+                            <property name="file" value="${shared.basedir}/${symlink}" />
+                        </phingcall>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <symlink target="${shared.basedir}/${symlink}" link="${application.releasesdir.current}/${symlink}" overwrite="true"/>
+    </target>
+
+    <target name="ndeploy.base.file.missing">
+        <input propertyName="type" validArgs="file,dir,skip" defaultValue="${defaultType}">Missing resource: ${file}${line.separator}Create it as a file, as a directory or skip it.</input>
+        <if>
+            <equals arg1="${type}" arg2="dir" />
+            <then>
+                <mkdir dir="${file}" />
+            </then>
+            <elseif>
+                <equals arg1="${type}" arg2="file" />
+                <then>
+                    <php function="dirname" returnProperty="dir">
+                        <param value="${file}"/>
+                    </php>
+                    <mkdir dir="${dir}" />
+                    <touch file="${file}" />
+                </then>
+            </elseif>
+        </if>
+    </target>
+
+    <target name="ndeploy.base.application">
+        <if>
+            <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
+            <then>
+                <echo msg="Call application specific deploy script." />
+                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritRefs="true" />
+            </then>
+            <else>
+                <echo msg="No application specific deploy script found!" />
+            </else>
+        </if>
+    </target>
+
+    <target name="ndeploy.base.config">
+        <echo msg="Wellcome to ndeploy build.properties skeleton generator!" level="warning" />
+
+        <input message="Application name" promptChar="?" propertyName="config.application.name" />
+        <input message="Application basedir" promptChar="?" propertyName="config.basedir" defaultValue="${application.startdir}"/>
+        <input message="Application framework " promptChar="?" propertyName="config.application.framework" validArgs="yii,symfony2,symfony," defaultValue="" />
+        <input message="Releases kept" promptChar="?" propertyName="application.releaseskept" defaultValue="100" />
+        <input message="SCM type " promptChar="?" propertyName="config.scm.type" validArgs="git,svn" defaultValue="git" />
+        <input message="SCM repository" promptChar="?" propertyName="config.scm.repository" />
+        <input message="Shared files" promptChar="?" propertyName="config.shared.files" />
+
+        <symlink target="${phing.file}" link="${config.basedir}/build.xml" />
+
+        <!-- generating properties file -->
+        <property name="config.propertyFileName" value="${config.basedir}/build.properties" override="false"/>
+
+        <if>
+            <available file="${config.propertyFileName}" type="file" />
+            <then>
+                <input message="Delete old ${config.propertyFileName} file" promptChar="?" propertyName="deleteOldProperty" validArgs="y,n" defaultValue="y" />
+                <if>
+                    <equals arg1="${deleteOldProperty}" arg2="y"/>
+                    <then>
+                        <delete file="${config.propertyFileName}" failonerror="true" />
+                    </then>
+                    <else>
+                        <fail>Property file allready exists!</fail>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <touch file="${config.propertyFileName}" />
+
+        <echo file="${config.propertyFileName}" append="true" message=";-- deploy basedir --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="basedir=${config.basedir}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+
+        <echo file="${config.propertyFileName}" append="true" message=";-- application --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="application.name=${config.application.name}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="application.framework=${config.application.framework}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.deploydir=${config.basedir}/current${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.repositorydir=${config.basedir}/src/${config.application.name}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.releasesdir=${config.basedir}/releases${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="application.releaseskept=${application.releaseskept}${line.separator}" />
+
+        <phingcall target="ndeploy.scm.config" />
+
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- shared files --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="shared.files=${config.shared.files}${line.separator}" />
+
+        <phingcall target="ndeploy.vendor.config" />
+        <phingcall target="ndeploy.framework.config" />
+        <phingcall target="ndeploy.maintenance.config" />
+        <phingcall target="ndeploy.hash.config" />
+        <phingcall target="ndeploy.lock.config" />
+
+        <input message="ndeploy lib" promptChar="?" propertyName="config.ndeploy.basedir" defaultValue="${phing.dir}"/>
+
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- ndpeloy build target's basedir --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="ndeploy.basedir=${config.ndeploy.basedir}${line.separator}" />
+
+        <echo message="Edit ${config.propertyFileName}"  level="warning" />
+
+    </target>
+
+</project>

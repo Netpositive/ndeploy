@@ -1,0 +1,39 @@
+;-- deploy basedir --
+basedir=/srv/example.org
+
+;-- application --
+application.name=example
+application.framework=symfony2
+application.repositorydir=/srv/example.org/src/example
+application.deploydir=/srv/example.org/current
+application.releasesdir=/srv/example.org/releases
+application.releaseskept=100
+
+;-- scm proprties --
+scm.type=git
+scm.repository=ssh://example@git.example.org/example.git
+scm.branch=stable
+
+;-- shared files --
+shared.files=vendor,app/config/parameters.yml,app/log.app/data
+
+;-- vendor --
+vendor=composer
+vendor.command=update
+
+;-- maintenance --
+;maintenance=false
+;maintenance.source=app/Resources/maintenance.html
+;maintenance.destination=web/maintenance.html
+;maintenance.remove=true
+
+;-- hash --
+;hash=true
+;hash.file=app/config/parameters_assets.yml,app/config/parameters_assets_2.yml
+
+;-- lock --
+;lock=true
+;lock.file=/srv/example.org/releases/ndeploy-example.lock
+
+;-- ndpeloy build target's basedir --
+ndeploy.basedir=~/src/ndeploy

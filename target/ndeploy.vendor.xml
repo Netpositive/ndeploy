@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.vendor">
+
+    <property name="vendor.composer.binary" value="${ndeploy.basedir}/bin/composer.phar" override="false" />
+
+    <property name="vendor" value="" override="false" />
+    <property name="vendor.command" value="" override="false" />
+
+    <target name="ndeploy.vendor.init">
+        <if>
+            <not>
+                <equals arg1="${vendor}" arg2="" />
+            </not>
+            <then>
+                <phingcall target="ndeploy.vendor.${vendor}" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.vendor.composer">
+        <echo level="info" msg="Using composer with ${vendor.command} command." />
+        <composer php="${php.binary}" composer="${vendor.composer.binary}" command="${vendor.command}">
+            <arg value="--working-dir" />
+            <arg path="${application.deploydir}" />
+            <arg value="--optimize-autoloader" />
+            <arg value="--no-dev" />
+        </composer>
+    </target>
+
+    <target name="ndeploy.vendor.sf2vendors">
+        <echo level="info" msg="Using bin/vendors with ${vendor.command} command." />
+        <exec dir="${application.deploydir}" command="${php.binary} bin/vendors ${vendor.command}" passthru="true" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.vendor.custom">
+        <exec dir="${application.deploydir}" command="${vendor.command}" passthru="true" checkreturn="true" />
+    </target>
+
+    <target name="ndeploy.vendor.config">
+        <input message="Vendor type" promptChar="?" propertyName="config.vendor" validArgs="composer,sf2vendors,custom,none" defaultValue="composer" />
+        <if>
+            <or>
+                <equals arg1="${config.vendor}" arg2="composer" />
+                <equals arg1="${config.vendor}" arg2="sf2vendors" />
+            </or>
+            <then>
+                <input message="Vendor command" promptChar="?" propertyName="config.vendor.command" validArgs="install,update" defaultValue="update" />
+            </then>
+            <elseif>
+                <equals arg1="${config.vendor}" arg2="custom" />
+                <then>
+                    <input message="Vendor command" promptChar="?" propertyName="config.vendor.command" />
+                </then>
+            </elseif>
+        </if>
+
+        <if>
+            <equals arg1="${config.vendor}" arg2="none" />
+            <then>
+                <property name="line.comment" value=";" />
+            </then>
+            <else>
+                <property name="line.comment" value="" />
+            </else>
+        </if>
+
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- vendor --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="${line.comment}vendor=${config.vendor}${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message="${line.comment}vendor.command=${config.vendor.command}${line.separator}" />
+    </target>
+
+</project>
