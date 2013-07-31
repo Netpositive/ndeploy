@@ -43,7 +43,7 @@ phing -f /path/where/you/installed/ndeploy/build.xml -q
 Example:
 
 ```bash
-burci@burci-dev:/srv/example.org$ phing -f /opt/ndeploy/build.xml  -q
+user@dev:/srv/example.org$ phing -f /opt/ndeploy/build.xml  -q
      [echo] Wellcome to ndeploy build.properties skeleton generator!
 Application name? example
 Application basedir [/srv/example.org]?
@@ -61,6 +61,16 @@ ndeploy lib [/opt/ndeploy/build.xml]?
 BUILD FINISHED
 
 Total time: 9.8417 seconds
+
+## Usage
+
+Build xml is symlinked to the project directory, so you need to run only a phing command.
+
+```bash
+user@dev:/srv/example.org$ phing
+```
+
+If something goes wrong, phing can be run with ```-verbose``` parameter
 
 ## build.properties examples
 
