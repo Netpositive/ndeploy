@@ -56,6 +56,7 @@ Vendor type(composer,sf2vendors,custom,none) [composer]?
 Vendor command(install,update) [update]?
 ndeploy lib [/opt/ndeploy/build.xml]?
      [echo] Edit /srv/example.org/build.properties
+```
 
 BUILD FINISHED
 
@@ -191,7 +192,6 @@ lock.file=/srv/example.org/releases/ndeploy-example.lock
 ;-- ndpeloy build target's basedir --
 ndeploy.basedir=~/src/ndeploy
 ```
-
 
 ## Project specific build file
 
