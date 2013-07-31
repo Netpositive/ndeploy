@@ -70,7 +70,7 @@ Build xml is symlinked to the project directory, so you need to run only a phing
 user@dev:/srv/example.org$ phing
 ```
 
-If something goes wrong, phing can be run with ```-verbose``` parameter
+If something goes wrong, phing can run with ```-verbose``` parameter.
 
 ## build.properties examples
 
@@ -230,5 +230,4 @@ File name mast be ndeploy.xml
 
 ## TODO
 
-1, Generate change log on deploy, like:
-  git log --pretty=format:"%h - %an: %s"
+- [ ] Generate change log on deploy, like: git log --pretty=format:"%h - %an: %s"
