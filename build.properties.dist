@@ -36,4 +36,4 @@ vendor.command=update
 ;lock.file=/srv/example.org/releases/ndeploy-example.lock
 
 ;-- ndpeloy build target's basedir --
-ndeploy.basedir=~/src/ndeploy
+ndeploy.basedir=/opt/ndeploy
