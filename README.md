@@ -206,7 +206,7 @@ ndeploy.basedir=~/src/ndeploy
 ## Project specific build file
 
 You can include your project specific build file, it will run at the end of the deploy process.
-File name mast be ndeploy.xml
+File name must be ndeploy.xml
 
 ### ndeploy.xml hello word example
 
