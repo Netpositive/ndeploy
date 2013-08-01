@@ -9,7 +9,7 @@ application.deploydir=/srv/example.org/current
 application.releasesdir=/srv/example.org/releases
 application.releaseskept=100
 
-;-- scm proprties --
+;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
 scm.branch=stable

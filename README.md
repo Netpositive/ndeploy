@@ -1,6 +1,6 @@
 # nDeploy
 
-nDeploy is a phing based deploy scrip for php ecosystem, some idea borrowed from http://capifony.org.
+nDeploy is a phing based deploy script for php ecosystem, some idea borrowed from http://capifony.org.
 Currently deploy can be started only from a server.
 
 ## Basics
@@ -11,7 +11,7 @@ Currently deploy can be started only from a server.
 - Symfony 1.4
 - Yii 1.1.x
 
-### Fetures:
+### Features:
 - releases support
 - composer support
 - shared file handling (symlink based)
@@ -44,7 +44,7 @@ Example:
 
 ```bash
 user@dev:/srv/example.org$ phing -f /opt/ndeploy/build.xml  -q
-     [echo] Wellcome to ndeploy build.properties skeleton generator!
+     [echo] Welcome to ndeploy build.properties skeleton generator!
 Application name? example
 Application basedir [/srv/example.org]?
 Application framework (yii,symfony2,symfony,) []?
@@ -88,7 +88,7 @@ application.deploydir=/srv/example.org/current
 application.releasesdir=/srv/example.org/releases
 application.releaseskept=20
 
-;-- scm proprties --
+;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
 scm.branch=stable
@@ -134,7 +134,7 @@ application.deploydir=/srv/example.org/current
 application.releasesdir=/srv/example.org/releases
 application.releaseskept=20
 
-;-- scm proprties --
+;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
 scm.branch=stable
@@ -208,20 +208,20 @@ ndeploy.basedir=~/src/ndeploy
 You can include your project specific build file, it will run at the end of the deploy process.
 File name must be ndeploy.xml
 
-### ndeploy.xml hello word example
+### ndeploy.xml hello world example
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="/usr/share/php5/PEAR/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
 
-<project name="cig.sms-container" default="example.project.init">
+<project name="example.project" default="example.project.init">
 
     <target name="project.example.init">
-        <phingcall target="project.example.helloword" />
+        <phingcall target="project.example.helloworld" />
     </target>
 
-    <target name="project.example.helloword">
-        <echo msg="Hello word!" level="warning" />
+    <target name="project.example.helloworld">
+        <echo msg="Hello world!" level="warning" />
         <!-- Variables like ${basedir}, ${application.name} can be used -->
     </target>
 

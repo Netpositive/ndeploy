@@ -37,7 +37,7 @@
 
     <target name="ndeploy.scm.config">
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
-        <echo file="${config.propertyFileName}" append="true" message=";-- scm proprties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- scm properties --${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="scm.type=${config.scm.type}${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="scm.repository=${config.scm.repository}${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";scm.branch=master${line.separator}" />

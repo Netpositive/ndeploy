@@ -168,7 +168,7 @@
     </target>
 
     <target name="ndeploy.base.config">
-        <echo msg="Wellcome to ndeploy build.properties skeleton generator!" level="warning" />
+        <echo msg="Welcome to ndeploy build.properties skeleton generator!" level="warning" />
 
         <input message="Application name" promptChar="?" propertyName="config.application.name" />
         <input message="Application basedir" promptChar="?" propertyName="config.basedir" defaultValue="${application.startdir}"/>
