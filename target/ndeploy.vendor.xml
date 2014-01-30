@@ -32,7 +32,7 @@
         <echo level="info" msg="Using composer with ${vendor.command} command." />
         <composer php="${php.binary}" composer="${vendor.composer.binary}" command="${vendor.command}">
             <arg value="--working-dir" />
-            <arg path="${application.deploydir}" />
+            <arg path="${application.releasesdir.latest}" />
             <arg value="--optimize-autoloader" />
             <arg value="--no-dev" />
         </composer>
