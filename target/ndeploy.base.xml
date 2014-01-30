@@ -65,8 +65,11 @@
     </target>
 
     <target name="ndeploy.base.release">
-        <echo msg="Symlink latest realse dir to deploydir." />
-        <symlink target="${application.releasesdir.latest}" link="${application.deploydir}" overwrite="true" />
+        <echo msg="Symlink latest release dir to deploy dir." />
+        <php function="readlink" returnProperty="current.symlink.target">
+            <param value="${application.releasesdir.latest}"/>
+        </php>
+        <symlink target="${current.symlink.target}" link="${application.deploydir}" overwrite="true" />
     </target>
 
     <target name="ndeploy.base.release.clean">
