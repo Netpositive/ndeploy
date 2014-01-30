@@ -29,7 +29,7 @@
             <istrue value="${application.framework.extra.migrate}"/>
             <then>
                 <echo msg="Checking doctrine migrations." />
-                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
                 <if>
                     <contains string="${migration-versions}" substring="not migrated" />
                     <then>
@@ -39,7 +39,7 @@
                         <if>
                             <equals arg1="${migrate}" arg2="y"/>
                             <then>
-                                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
                             </then>
                         </if>
                     </then>
@@ -56,7 +56,7 @@
             <available file="${application.deploydir}/app/cache" type="dir" followSymlinks="true" />
             <then>
                 <echo msg="Remove everything from the cache directory." />
-                <exec dir="${application.deploydir}" command="rm -rf app/cache/*" passthru="true" />
+                <exec dir="${application.releasesdir.latest}" command="rm -rf app/cache/*" passthru="true" />
             </then>
         </if>
     </target>
@@ -65,15 +65,15 @@
         <phingcall target="ndeploy.framework.symfony2.cache.clean" />
 
         <echo msg="Calling symfony's cache clear." />
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} cache:clear --env=prod --no-debug" checkreturn="false" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:clear --env=prod --no-debug" checkreturn="false" />
 
         <echo msg="Cache warmup." />
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} cache:warmup --env=prod --no-debug" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:warmup --env=prod --no-debug" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony2.assets.install">
         <echo msg="Installing assets." />
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} assets:install --env=prod --no-debug --symlink web" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} assets:install --env=prod --no-debug --symlink web" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony2.assetic.dump">
@@ -81,7 +81,7 @@
             <istrue value="${application.framework.extra.assetic.dump}" />
             <then>
                 <echo msg="Assetic dump." />
-                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony2.command} assetic:dump --env=prod --no-debug" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} assetic:dump --env=prod --no-debug" checkreturn="true" />
             </then>
         </if>
     </target>

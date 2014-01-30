@@ -24,21 +24,21 @@
     </target>
 
     <target name="ndeploy.framework.symfony.permissions">
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} project:permissions" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} project:permissions" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony.migrate">
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} doctrine:migrate" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} doctrine:migrate" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony.cache.clean">
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} cc" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} cc" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony.cache.warmup">
         <phingcall target="ndeploy.framework.symfony.cache.clean" />
 
-        <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} doctrine:build --model --forms --filters" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} doctrine:build --model --forms --filters" checkreturn="true" />
     </target>
 
     <target name="ndeploy.framework.symfony.assets.publish">
@@ -46,7 +46,7 @@
             <istrue value="${application.framework.extra.assets.publish}" />
             <then>
                 <echo msg="Assets publish." />
-                <exec dir="${application.deploydir}" command="${application.framework.extra.symfony.command} plugin:publish-assets" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} plugin:publish-assets" checkreturn="true" />
             </then>
         </if>
     </target>

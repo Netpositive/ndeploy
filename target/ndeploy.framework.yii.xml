@@ -23,7 +23,7 @@
         <if>
             <istrue value="${application.framework.extra.migrate}"/>
             <then>
-                <exec dir="${application.deploydir}" command="${php.binary} ${application.framework.extra.migrate.command} migrate new" outputProperty="migration-versions" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate new" outputProperty="migration-versions" checkreturn="true" />
                 <if>
                     <not>
                         <contains string="${migration-versions}" substring="Your system is up-to-date." />
@@ -35,7 +35,7 @@
                         <if>
                             <equals arg1="${migrate}" arg2="y"/>
                             <then>
-                                <exec dir="${application.deploydir}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
+                                <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
                             </then>
                         </if>
                     </then>

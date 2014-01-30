@@ -40,11 +40,11 @@
 
     <target name="ndeploy.vendor.sf2vendors">
         <echo level="info" msg="Using bin/vendors with ${vendor.command} command." />
-        <exec dir="${application.deploydir}" command="${php.binary} bin/vendors ${vendor.command}" passthru="true" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${php.binary} bin/vendors ${vendor.command}" passthru="true" checkreturn="true" />
     </target>
 
     <target name="ndeploy.vendor.custom">
-        <exec dir="${application.deploydir}" command="${vendor.command}" passthru="true" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${vendor.command}" passthru="true" checkreturn="true" />
     </target>
 
     <target name="ndeploy.vendor.config">
