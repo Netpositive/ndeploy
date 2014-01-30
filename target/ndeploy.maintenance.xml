@@ -64,13 +64,13 @@
             <istrue value="${maintenance}" />
             <then>
                 <if>
-                    <available file="${application.releasesdir.current}/${maintenance.source}" followSymlinks="true" />
+                    <available file="${application.releasesdir.latest}/${maintenance.source}" followSymlinks="true" />
                     <then>
                         <echo msg="Creating symlink to maintenance.html in the current release directory."/>
-                        <symlink target="${application.releasesdir.current}/${maintenance.source}" link="${application.releasesdir.current}/${maintenance.destination}" overwrite="true"/>
+                        <symlink target="${application.releasesdir.latest}/${maintenance.source}" link="${application.releasesdir.latest}/${maintenance.destination}" overwrite="true"/>
                     </then>
                     <else>
-                        <echo level="error" msg="File '${application.releasesdir.current}/${maintenance.source}' not found!" />
+                        <echo level="error" msg="File '${application.releasesdir.latest}/${maintenance.source}' not found!" />
                     </else>
                 </if>
             </then>

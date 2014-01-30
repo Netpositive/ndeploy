@@ -49,39 +49,24 @@
         </if>
 
         <phingcall target="ndeploy.lock.init" />
-        <phingcall target="ndeploy.lock.check" />
-        <phingcall target="ndeploy.lock.check" />
-        <phingcall target="ndeploy.lock.check" />
-        <phingcall target="ndeploy.scm.init" />
-        <phingcall target="ndeploy.vendor.init" />
-        <phingcall target="ndeploy.hash.init" />
-        <phingcall target="ndeploy.framework.init" />
-        <phingcall target="ndeploy.base.application" />
-        <phingcall target="ndeploy.lock.check" />
-        <phingcall target="ndeploy.maintenance.remove" />
+
+        <foreach list="${application.run.pre}" param="targettask" target="ndeploy.base.runtask" />
+        <foreach list="${application.run.init}" param="targettask" target="ndeploy.base.runtask" />
+        <foreach list="${application.run.release}" param="targettask" target="ndeploy.base.runtask" />
+        <foreach list="${application.run.after}" param="targettask" target="ndeploy.base.runtask" />
+
         <phingcall target="ndeploy.lock.remove" />
 
     </target>
 
+    <target name="ndeploy.base.runtask">
+        <phingcall target="ndeploy.lock.check" />
+        <phingcall target="${targettask}" />
+    </target>
+
     <target name="ndeploy.base.release">
-        <property name="application.releasesdir.current" value="${application.releasesdir}/${application.deployhash}" override="true" />
-
-        <echo msg="Copy files from repository dir to current realse dir." />
-        <copy todir="${application.releasesdir.current}" >
-            <fileset dir="${application.repositorydir}">
-                <exclude name="**/.gitignore" />
-                <exclude name="**/.git*" />
-                <exclude name="**/.svn*" />
-            </fileset>
-        </copy>
-
-        <phingcall target="ndeploy.base.shared" />
-        <phingcall target="ndeploy.base.release.clean" />
-        <phingcall target="ndeploy.maintenance.init" />
-
-        <echo msg="Symlink current realse dir to deploydir." />
-        <symlink target="${application.releasesdir.current}" link="${application.deploydir}" overwrite="true"/>
-
+        <echo msg="Symlink latest realse dir to deploydir." />
+        <symlink target="${application.releasesdir.latest}" link="${application.deploydir}" overwrite="true" />
     </target>
 
     <target name="ndeploy.base.release.clean">
@@ -131,7 +116,7 @@
             </then>
         </if>
 
-        <symlink target="${shared.basedir}/${symlink}" link="${application.releasesdir.current}/${symlink}" overwrite="true"/>
+        <symlink target="${shared.basedir}/${symlink}" link="${application.releasesdir.latest}/${symlink}" overwrite="true"/>
     </target>
 
     <target name="ndeploy.base.file.missing">

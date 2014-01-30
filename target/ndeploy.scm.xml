@@ -32,7 +32,20 @@
 
         <echo>Deploy hash: ${application.deployhash}</echo>
 
-        <phingcall target="ndeploy.base.release" />
+        <property name="application.releasesdir.current" value="${application.releasesdir}/${application.deployhash}" override="true" />
+
+        <echo msg="Copy files from repository dir to current release dir." />
+        <copy todir="${application.releasesdir.current}" >
+            <fileset dir="${application.repositorydir}">
+                <exclude name="**/.gitignore" />
+                <exclude name="**/.git*" />
+                <exclude name="**/.svn*" />
+            </fileset>
+        </copy>
+
+        <symlink target="${application.releasesdir.current}" link="${application.releasesdir.latest}" overwrite="true"/>
+
+        <phingcall target="ndeploy.hash.init" />
     </target>
 
     <target name="ndeploy.scm.config">

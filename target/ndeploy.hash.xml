@@ -12,9 +12,6 @@
 
 <project name="ndeploy.hash">
 
-    <property name="php.binary" value="/usr/bin/php" override="false" />
-    <property name="composer.binary" value="${ndeploy.basedir}/bin/composer.phar" override="false" />
-
     <!-- Check src dir -->
     <target name="ndeploy.hash.init">
         <if>
@@ -29,7 +26,7 @@
     </target>
 
     <target name="ndeploy.hash.file">
-        <reflexive file="${application.deploydir}/${file}">
+        <reflexive file="${application.releasesdir.latest}/${file}">
             <filterchain>
                 <replacetokens begintoken="##" endtoken="##">
                     <token key="HASH" value="${application.deployhash}" />

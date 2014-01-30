@@ -30,9 +30,17 @@
     <property name="application.framework" value="" override="false" />
     <property name="application.deploydir" value="${basedir}/current" override="false" />
     <property name="application.releasesdir" value="${basedir}/releases" override="false" />
+    <property name="application.releasesdir.latest" value="${application.releasesdir}/latest" override="false" />
     <property name="application.repositorydir" value="${basedir}/src/${application.name}" override="false" />
     <property name="application.releaseskept" value="100" override="false" />
 
+    <!-- application run order -->
+    <property name="application.run.pre" value="ndeploy.scm.init,ndeploy.base.release.clean" override="false" />
+    <property name="application.run.init" value="ndeploy.base.shared,ndeploy.maintenance.init,ndeploy.vendor.init" override="false" />
+    <property name="application.run.release" value="ndeploy.base.release" override="false" />
+    <property name="application.run.after" value="ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove" override="false" />
+
+    <!-- timestamp format -->
     <tstamp>
         <format property="application.deployhash" pattern="%Y%m%d_%H%M%S" />
     </tstamp>
