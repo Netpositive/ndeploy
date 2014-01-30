@@ -34,7 +34,7 @@
     <property name="application.repositorydir" value="${basedir}/src/${application.name}" override="false" />
     <property name="application.releaseskept" value="100" override="false" />
 
-    <!-- application run order -->
+    <!-- application tasks run order -->
     <property name="application.run.pre" value="ndeploy.scm.init,ndeploy.base.release.clean" override="false" />
     <property name="application.run.init" value="ndeploy.base.shared,ndeploy.maintenance.init" override="false" />
     <property name="application.run.release" value="ndeploy.base.release" override="false" />

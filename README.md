@@ -228,6 +228,20 @@ File name must be ndeploy.xml
 </project>
 ```
 
+## Project specific deploy tasks order
+
+You can override the deploy tasks order.
+
+### build.properties examples
+
+```
+<!-- application tasks run order -->
+application.run.pre=ndeploy.scm.init,ndeploy.base.release.clean
+application.run.init=ndeploy.base.shared,ndeploy.maintenance.init
+application.run.release=ndeploy.base.release
+application.run.after=ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove
+```
+
 ## TODO
 
 - [ ] Generate change log on deploy, like: git log --pretty=format:"%h - %an: %s"
