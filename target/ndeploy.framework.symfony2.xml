@@ -97,6 +97,8 @@
     <target name="ndeploy.framework.symfony2.config">
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";-- symfony2 framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.ask=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assetic.dump=true${line.separator}" />
     </target>
 

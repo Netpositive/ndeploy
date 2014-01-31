@@ -14,6 +14,7 @@
 
     <property name="application.framework.extra.symfony.command" value="${php.binary} ./symfony" override="false" />
     <property name="application.framework.extra.assets.publish" value="true" override="false" />
+    <property name="application.framework.extra.permissions" value="true" override="false" />
 
     <target name="ndeploy.framework.symfony.init">
         <echo level="info" msg="Run symfony specific components." />
@@ -24,11 +25,21 @@
     </target>
 
     <target name="ndeploy.framework.symfony.permissions">
-        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} project:permissions" checkreturn="true" />
+        <if>
+            <istrue value="${application.framework.extra.migrate}"/>
+            <then>
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} project:permissions" checkreturn="true" />
+            </then>
+        </if>
     </target>
 
     <target name="ndeploy.framework.symfony.migrate">
-        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} doctrine:migrate" checkreturn="true" />
+        <if>
+            <istrue value="${application.framework.extra.migrate}"/>
+            <then>
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony.command} doctrine:migrate" checkreturn="true" />
+            </then>
+        </if>
     </target>
 
     <target name="ndeploy.framework.symfony.cache.clean">
@@ -54,6 +65,8 @@
     <target name="ndeploy.framework.symfony.config">
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";-- symfony framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.permissions=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assets.publish=true${line.separator}" />
     </target>
 

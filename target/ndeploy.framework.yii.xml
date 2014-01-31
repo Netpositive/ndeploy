@@ -58,6 +58,8 @@
     <target name="ndeploy.framework.yii.config">
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";-- yii framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.ask=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.command=${application.framework.extra.migrate.command}${line.separator}" />
     </target>
 
