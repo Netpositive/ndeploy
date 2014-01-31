@@ -18,6 +18,7 @@
 
     <property name="application.framework" value="" override="false" />
     <property name="application.framework.extra.migrate" value="true" override="false" />
+    <property name="application.framework.extra.migrate.ask" value="true" override="false" />
 
     <target name="ndeploy.framework.init">
         <if>

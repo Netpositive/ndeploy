@@ -28,23 +28,31 @@
         <if>
             <istrue value="${application.framework.extra.migrate}"/>
             <then>
-                <echo msg="Checking doctrine migrations." />
-                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
                 <if>
-                    <contains string="${migration-versions}" substring="not migrated" />
+                    <istrue value="${application.framework.extra.migrate.ask}"/>
                     <then>
-                        <echo msg="Executing doctrine migrations." />
-                        <echo msg="${migration-versions}" />
-                        <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                        <echo msg="Checking doctrine migrations." />
+                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
                         <if>
-                            <equals arg1="${migrate}" arg2="y"/>
+                            <contains string="${migration-versions}" substring="not migrated" />
                             <then>
-                                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                                <echo msg="Executing doctrine migrations." />
+                                <echo msg="${migration-versions}" />
+                                <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                                <if>
+                                    <equals arg1="${migrate}" arg2="y"/>
+                                    <then>
+                                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                                    </then>
+                                </if>
                             </then>
+                            <else>
+                                <echo msg="No migrations to execute."/>
+                            </else>
                         </if>
                     </then>
                     <else>
-                        <echo msg="No migrations to execute."/>
+                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
                     </else>
                 </if>
             </then>

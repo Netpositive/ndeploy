@@ -23,24 +23,32 @@
         <if>
             <istrue value="${application.framework.extra.migrate}"/>
             <then>
-                <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate new" outputProperty="migration-versions" checkreturn="true" />
                 <if>
-                    <not>
-                        <contains string="${migration-versions}" substring="Your system is up-to-date." />
-                    </not>
+                    <istrue value="${application.framework.extra.migrate.ask}"/>
                     <then>
-                        <echo msg="Executing migrations." />
-                        <echo msg="${migration-versions}" />
-                        <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                        <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate new" outputProperty="migration-versions" checkreturn="true" />
                         <if>
-                            <equals arg1="${migrate}" arg2="y"/>
+                            <not>
+                                <contains string="${migration-versions}" substring="Your system is up-to-date." />
+                            </not>
                             <then>
-                                <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
+                                <echo msg="Executing migrations." />
+                                <echo msg="${migration-versions}" />
+                                <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                                <if>
+                                    <equals arg1="${migrate}" arg2="y"/>
+                                    <then>
+                                        <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
+                                    </then>
+                                </if>
                             </then>
+                            <else>
+                                <echo msg="No migrations to execute."/>
+                            </else>
                         </if>
                     </then>
                     <else>
-                        <echo msg="No migrations to execute."/>
+                        <exec dir="${application.releasesdir.latest}" command="${php.binary} ${application.framework.extra.migrate.command} migrate --interactive=0" passthru="true" checkreturn="true" />
                     </else>
                 </if>
             </then>
