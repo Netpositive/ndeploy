@@ -1,0 +1,13 @@
+{
+    "name": "netpositive/ndeploy",
+    "description": "nDeploy is a phing based deploy script for php ecosystem.",
+    "authors": [
+        {
+            "name": "Peter Buri",
+            "email": "peter.buri@netpositive.hu"
+        }
+    ],
+    "require": {
+        "phing/phing": "2.7.0"
+    }
+}
