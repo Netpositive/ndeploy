@@ -147,7 +147,7 @@
             <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
             <then>
                 <echo msg="Call application specific deploy script." />
-                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritRefs="true" />
+                <phing phingfile="${application.deploydir}/ndeploy.xml" />
             </then>
             <else>
                 <echo msg="No application specific deploy script found!" />
