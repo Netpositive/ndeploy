@@ -34,7 +34,6 @@
             <arg value="--working-dir" />
             <arg path="${application.releasesdir.latest}" />
             <arg value="--optimize-autoloader" />
-            <arg value="--no-dev" />
         </composer>
     </target>
 
