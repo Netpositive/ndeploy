@@ -13,6 +13,7 @@
 <project name="ndeploy.framework.symfony2">
 
     <property name="application.framework.extra.symfony2.command" value="${php.binary} ./app/console" override="false" />
+    <property name="application.framework.extra.symfony2.cache.dir" value="app/cache" override="false" />
     <property name="application.framework.extra.assetic.dump" value="true" override="false" />
 
     <target name="ndeploy.framework.symfony2.init">
@@ -61,10 +62,10 @@
 
     <target name="ndeploy.framework.symfony2.cache.clean">
         <if>
-            <available file="${application.deploydir}/app/cache" type="dir" followSymlinks="true" />
+            <available file="${application.deploydir}/${application.framework.extra.symfony2.cache.dir}" type="dir" followSymlinks="true" />
             <then>
                 <echo msg="Remove everything from the cache directory." />
-                <exec dir="${application.releasesdir.latest}" command="rm -rf app/cache/*" passthru="true" />
+                <exec dir="${application.releasesdir.latest}" command="rm -rf ${application.framework.extra.symfony2.cache.dir}/*" passthru="true" />
             </then>
         </if>
     </target>
