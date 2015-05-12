@@ -33,7 +33,6 @@
         <composer php="${php.binary}" composer="${vendor.composer.binary}" command="${vendor.command}">
             <arg value="--working-dir" />
             <arg path="${application.releasesdir.latest}" />
-            <arg value="--no-interaction" />
             <arg value="--no-ansi" />
             <arg value="--no-progress" />
             <arg value="--optimize-autoloader" />
