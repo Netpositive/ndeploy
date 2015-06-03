@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<!--
+  - This file is part of the nDeploy package.
+  -
+  - (c) Peter Buri <peter.buri@netpositive.hu>
+  -
+  - For the full copyright and license information, please view the LICENSE
+  - file that was distributed with this source code.
+  -->
+
+<project name="ndeploy.version">
+
+    <!-- Check src dir -->
+    <target name="ndeploy.version.init">
+        <if>
+            <and>
+                <equals arg1="${version}" arg2="true" />
+                <not><equals arg1="${version.file}" arg2="" /></not>
+            </and>
+            <then>
+                <foreach list="${version.file}" param="file" target="ndeploy.version.file" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.version.file">
+        <reflexive file="${application.releasesdir.latest}/${file}">
+            <filterchain>
+                <replacetokens begintoken="##" endtoken="##">
+                    <token key="VERSION" value="${application.version}" />
+                </replacetokens>
+            </filterchain>
+        </reflexive>
+    </target>
+
+    <target name="ndeploy.version.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- version --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";version=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";version.file=${line.separator}" />
+    </target>
+
+</project>

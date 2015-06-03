@@ -30,7 +30,11 @@
             <param value="${application.name}_${application.deployhash}_${scm.hash}"/>
         </php>
 
-        <echo>Deploy hash: ${application.deployhash}</echo>
+        <php function="trim" returnProperty="application.version">
+            <param value="${scm.version}"/>
+        </php>
+
+        <echo>Deploy hash / version: ${application.deployhash} - ${application.version}</echo>
 
         <property name="application.releasesdir.current" value="${application.releasesdir}/${application.deployhash}" override="true" />
 
@@ -46,6 +50,7 @@
         <symlink target="${application.releasesdir.current}" link="${application.releasesdir.latest}" overwrite="true"/>
 
         <phingcall target="ndeploy.hash.init" />
+        <phingcall target="ndeploy.version.init" />
     </target>
 
     <target name="ndeploy.scm.config">

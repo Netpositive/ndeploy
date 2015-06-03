@@ -195,6 +195,10 @@ maintenance.remove=true
 ;hash=true
 ;hash.file=
 
+;-- version --
+;version=true
+;version.file=
+
 ;-- lock --
 lock=true
 lock.file=/srv/example.org/releases/ndeploy-example.lock
@@ -214,7 +218,7 @@ File name must be ndeploy.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="/usr/share/php5/PEAR/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
 
-<project name="example.project" default="example.project.init">
+<project name="project.example" default="project.example.init">
 
     <target name="project.example.init">
         <phingcall target="project.example.helloworld" />

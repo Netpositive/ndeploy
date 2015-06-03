@@ -19,6 +19,7 @@
     <import file="${ndeploy.basedir}/target/ndeploy.framework.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.maintenance.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.hash.xml"/>
+    <import file="${ndeploy.basedir}/target/ndeploy.version.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.lock.xml"/>
 
     <taskdef classname="KeepReleaseTask" name="keeprelease" classpath="${ndeploy.basedir}/class" />
@@ -147,7 +148,7 @@
             <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
             <then>
                 <echo msg="Call application specific deploy script." />
-                <phing phingfile="${application.deploydir}/ndeploy.xml" />
+                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritAll="1" />
             </then>
             <else>
                 <echo msg="No application specific deploy script found!" />

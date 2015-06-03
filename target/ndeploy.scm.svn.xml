@@ -38,6 +38,7 @@
         </if>
 
         <svnlastrevision workingcopy="${application.repositorydir}" propertyname="scm.hash"/>
+        <svnlastrevision workingcopy="${application.repositorydir}" propertyname="scm.version"/>
 
         <phingcall target="ndeploy.scm.release" />
     </target>

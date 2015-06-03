@@ -12,6 +12,8 @@
 
 <project name="ndeploy.scm.git" description="Git">
 
+    <taskdef classname="GitDescribeTask" name="gitdescribe" classpath="${ndeploy.basedir}/class" />
+
     <property name="scm.git.extra.path" value="/usr/bin/git" override="false" />
     <property name="scm.git.extra.path.clone" value="${scm.git.extra.path}" override="false" />
     <property name="scm.git.extra.path.pull" value="${scm.git.extra.path}" override="false" />
@@ -42,6 +44,14 @@
         </if>
 
         <gitlog gitPath="${scm.git.extra.path}" format="%h" maxCount="1" outputProperty="scm.hash" repository="${application.repositorydir}" />
+        <trycatch>
+            <try>
+                <gitdescribe gitPath="${scm.git.extra.path}" tags="1" abbrev="0" outputProperty="scm.version" repository="${application.repositorydir}" />
+            </try>
+            <catch>
+                <property name="scm.version" value="${scm.hash}" />
+            </catch>
+        </trycatch>
 
         <phingcall target="ndeploy.scm.release" />
     </target>
