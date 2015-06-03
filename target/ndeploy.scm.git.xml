@@ -44,14 +44,7 @@
         </if>
 
         <gitlog gitPath="${scm.git.extra.path}" format="%h" maxCount="1" outputProperty="scm.hash" repository="${application.repositorydir}" />
-        <trycatch>
-            <try>
-                <gitdescribe gitPath="${scm.git.extra.path}" tags="1" abbrev="0" outputProperty="scm.version" repository="${application.repositorydir}" />
-            </try>
-            <catch>
-                <property name="scm.version" value="${scm.hash}" />
-            </catch>
-        </trycatch>
+        <gitdescribe gitPath="${scm.git.extra.path}" tags="1" always="1" outputProperty="scm.version" repository="${application.repositorydir}" />
 
         <phingcall target="ndeploy.scm.release" />
     </target>
