@@ -212,6 +212,7 @@
         <phingcall target="ndeploy.framework.config" />
         <phingcall target="ndeploy.maintenance.config" />
         <phingcall target="ndeploy.hash.config" />
+        <phingcall target="ndeploy.version.config" />
         <phingcall target="ndeploy.lock.config" />
 
         <input message="ndeploy lib" promptChar="?" propertyName="config.ndeploy.basedir" defaultValue="${phing.dir}"/>

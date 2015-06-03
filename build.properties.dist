@@ -29,7 +29,11 @@ vendor.command=update
 
 ;-- hash --
 ;hash=true
-;hash.file=app/config/parameters_assets.yml,app/config/parameters_assets_2.yml
+;hash.file=app/config/parameters_assets.yml,app/config/parameters_assets.yml
+
+;-- version --
+;version=true
+;version.file=app/config/parameters_assets.yml,app/config/parameters_version.yml
 
 ;-- lock --
 ;lock=true
