@@ -72,7 +72,7 @@
         <tstamp>
             <format property="ndeploy.timestamp.end" pattern="%Y-%m-%d %H:%M:%S" />
         </tstamp>
-        <echo message="Deploy ended at ${ndeploy.timestamp.end}" level="warning" />
+        <echo message="Deploy ended at ${ndeploy.timestamp.end} (start: ${ndeploy.timestamp.start})" level="warning" />
     </target>
 
     <target name="config">
