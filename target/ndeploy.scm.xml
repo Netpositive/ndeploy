@@ -12,6 +12,8 @@
 
 <project name="ndeploy.scm" description="scm">
 
+    <property name="scm.innerpath" value="" override="false" />
+
     <import file="${ndeploy.basedir}/target/ndeploy.scm.${scm.type}.xml"/>
 
     <target name="ndeploy.scm.init">
@@ -34,13 +36,18 @@
             <param value="${scm.version}"/>
         </php>
 
+        <php function="rtrim" returnProperty="application.repositorydir.inner">
+            <param value="${application.repositorydir}/${scm.innerpath}" />
+            <param value="/" />
+        </php>
+
         <echo>Deploy hash / version: ${application.deployhash} - ${application.version}</echo>
 
         <property name="application.releasesdir.current" value="${application.releasesdir}/${application.deployhash}" override="true" />
 
-        <echo msg="Copy files from repository dir to current release dir." />
+        <echo msg="Copy files from '${application.repositorydir.inner}' dir to '${application.releasesdir.current}' release dir." />
         <copy todir="${application.releasesdir.current}" >
-            <fileset dir="${application.repositorydir}">
+            <fileset dir="${application.repositorydir.inner}">
                 <exclude name="**/.gitignore" />
                 <exclude name="**/.git*" />
                 <exclude name="**/.svn*" />
