@@ -15,8 +15,6 @@
     <taskdef classname="GitDescribeTask" name="gitdescribe" classpath="${ndeploy.basedir}/class" />
 
     <property name="scm.git.extra.path" value="/usr/bin/git" override="false" />
-    <property name="scm.git.extra.path.clone" value="${scm.git.extra.path}" override="false" />
-    <property name="scm.git.extra.path.pull" value="${scm.git.extra.path}" override="false" />
 
     <property name="scm.git.extra.describe.all" value="1" override="false" />
     <property name="scm.git.extra.describe.tags" value="0" override="false" />
@@ -31,21 +29,12 @@
             <istrue value="${application.repositorydir.new}" />
             <then>
                 <echo>New repository, cloning.</echo>
-                <gitclone gitPath="${scm.git.extra.path.clone}" repository="${scm.repository}" targetPath="${application.repositorydir}" />
+                <gitclone gitPath="${scm.git.extra.path}" repository="${scm.repository}" targetPath="${application.repositorydir}" />
             </then>
-            <else>
-                <gitpull gitPath="${scm.git.extra.path.pull}" repository="${application.repositorydir}" all="true"/>
-            </else>
         </if>
 
-        <if>
-            <not>
-                <equals arg1="${scm.branch}" arg2="" />
-            </not>
-            <then>
-                <gitcheckout gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" branchname="${scm.branch}"/>
-            </then>
-        </if>
+        <gitfetch gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" all="true" prune="true" tags="true" force="true" />
+        <gitcheckout gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" branchname="origin/${scm.branch}" force="true" />
 
         <gitlog gitPath="${scm.git.extra.path}" format="%h" maxCount="1" outputProperty="scm.hash" repository="${application.repositorydir}" />
         <gitdescribe gitPath="${scm.git.extra.path}" all="${scm.git.extra.describe.all}" tags="${scm.git.extra.describe.tags}" long="${scm.git.extra.describe.long}" always="1" outputProperty="scm.version" repository="${application.repositorydir}" />
