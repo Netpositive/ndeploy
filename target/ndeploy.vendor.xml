@@ -12,10 +12,13 @@
 
 <project name="ndeploy.vendor">
 
+    <taskdef classname="ComposerPathUpdateTask" name="composerpathupdate" classpath="${ndeploy.basedir}/class" />
+
     <property name="vendor.composer.binary" value="${ndeploy.basedir}/bin/composer.phar" override="false" />
 
     <property name="vendor" value="" override="false" />
     <property name="vendor.command" value="" override="false" />
+    <property name="vendor.extra.composer.pathupdate" value="false" override="false" />
 
     <target name="ndeploy.vendor.init">
         <if>
@@ -30,6 +33,19 @@
 
     <target name="ndeploy.vendor.composer">
         <echo level="info" msg="Using composer with ${vendor.command} command." />
+
+        <if>
+            <equals arg1="${vendor.extra.composer.pathupdate}" arg2="true" />
+            <then>
+                <php function="rtrim" returnProperty="application.repositorydir.inner">
+                    <param value="${application.repositorydir}/${scm.innerpath}" />
+                    <param value="/" />
+                </php>
+
+                <composerpathupdate repositorydir="${application.repositorydir.inner}" releasedir="${application.releasesdir.latest}" />
+            </then>
+        </if>
+
         <composer php="${php.binary}" composer="${vendor.composer.binary}" command="${vendor.command}">
             <arg value="--working-dir" />
             <arg path="${application.releasesdir.latest}" />
