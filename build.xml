@@ -35,10 +35,10 @@
     <property name="application.releaseskept" value="100" override="false" />
 
     <!-- application tasks run order -->
-    <property name="application.run.pre" value="ndeploy.scm.init,ndeploy.base.release.clean" override="false" />
+    <property name="application.run.pre" value="ndeploy.base.application.pre,ndeploy.scm.init,ndeploy.base.release.clean" override="false" />
     <property name="application.run.init" value="ndeploy.base.shared,ndeploy.maintenance.init" override="false" />
     <property name="application.run.release" value="ndeploy.base.release" override="false" />
-    <property name="application.run.after" value="ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove" override="false" />
+    <property name="application.run.after" value="ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove,ndeploy.base.application.post" override="false" />
 
     <!-- timestamp format -->
     <tstamp>
