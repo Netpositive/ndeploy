@@ -12,6 +12,7 @@
 
 <project name="ndeploy.scm" description="scm">
 
+    <property name="scm.branch" value="master" override="false" />
     <property name="scm.innerpath" value="" override="false" />
 
     <import file="${ndeploy.basedir}/target/ndeploy.scm.${scm.type}.xml"/>
