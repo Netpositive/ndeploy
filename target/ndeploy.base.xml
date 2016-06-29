@@ -152,11 +152,11 @@
                 <not>
                     <equals arg1="${application.task.pre}" arg2="" />
                 </not>
-                <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
+                <available file="${application.releasesdir.latest}/ndeploy.xml" type="file" followSymlinks="true" />
             </and>
             <then>
                 <echo msg="Call application specific pre deploy script." />
-                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritAll="1" inheritRefs="0" target="${application.task.pre}"/>
+                <phing phingfile="${application.releasesdir.latest}/ndeploy.xml" inheritAll="1" inheritRefs="0" target="${application.task.pre}"/>
             </then>
             <else>
                 <echo msg="No application specific pre deploy script found!" />
@@ -166,10 +166,10 @@
 
     <target name="ndeploy.base.application">
         <if>
-            <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
+            <available file="${application.releasesdir.latest}/ndeploy.xml" type="file" followSymlinks="true" />
             <then>
                 <echo msg="Call application specific deploy script." />
-                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritAll="1" inheritRefs="0" />
+                <phing phingfile="${application.releasesdir.latest}/ndeploy.xml" inheritAll="1" inheritRefs="0" />
             </then>
             <else>
                 <echo msg="No application specific deploy script found!" />
@@ -183,11 +183,11 @@
                 <not>
                     <equals arg1="${application.task.post}" arg2="" />
                 </not>
-                <available file="${application.deploydir}/ndeploy.xml" type="file" followSymlinks="true" />
+                <available file="${application.releasesdir.latest}/ndeploy.xml" type="file" followSymlinks="true" />
             </and>
             <then>
                 <echo msg="Call application specific post deploy script." />
-                <phing phingfile="${application.deploydir}/ndeploy.xml" inheritAll="1" inheritRefs="0" target="${application.task.post}"/>
+                <phing phingfile="${application.releasesdir.latest}/ndeploy.xml" inheritAll="1" inheritRefs="0" target="${application.task.post}"/>
             </then>
             <else>
                 <echo msg="No application specific post deploy script found!" />
