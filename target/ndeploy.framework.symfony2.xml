@@ -66,6 +66,7 @@
             <then>
                 <echo msg="Remove everything from the cache directory." />
                 <exec dir="${application.releasesdir.latest}" command="rm -rf ${application.framework.extra.symfony2.cache.dir}/*" passthru="true" />
+                <exec dir="${application.releasesdir.latest}" command="chmod a+w ${application.framework.extra.symfony2.cache.dir}" passthru="true" />
             </then>
         </if>
     </target>
