@@ -240,10 +240,10 @@ You can override the deploy tasks order.
 
 ```
 <!-- application tasks run order -->
-application.run.pre=ndeploy.scm.init,ndeploy.base.release.clean
+application.run.pre=ndeploy.base.application.pre,ndeploy.scm.init,ndeploy.base.release.clean
 application.run.init=ndeploy.base.shared,ndeploy.maintenance.init
 application.run.release=ndeploy.base.release
-application.run.after=ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove
+application.run.after=ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove,ndeploy.base.application.post
 ```
 
 ## TODO
