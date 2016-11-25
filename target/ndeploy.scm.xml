@@ -48,8 +48,8 @@
 
         <echo msg="Copy files from '${application.repositorydir.inner}' dir to '${application.releasesdir.current}' release dir." />
         <copy todir="${application.releasesdir.current}" >
-            <fileset dir="${application.repositorydir.inner}">
-                <exclude name="**/.gitignore" />
+            <fileset dir="${application.repositorydir.inner}" defaultexcludes="false">
+                <!-- defaultexcludes was *~, #*#, .#*, %*%, CVS, CVS/**, .cvsignore, SCCS, SCCS/**, vssver.scc, .svn, .svn/**, ._*, .DS_Store, .darcs, .darcs/**, .git, .git/**, .gitattributes, .gitignore, .gitmodules -->
                 <exclude name="**/.git*" />
                 <exclude name="**/.svn*" />
             </fileset>
