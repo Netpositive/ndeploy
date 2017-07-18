@@ -58,7 +58,14 @@ class ComposerPathUpdateTask extends Task
                     && isset($repository['url'])
                     && false !== strpos($repository['url'], '..')
                 ) {
-                    $url = realpath(implode('/', array($this->getRepositorydir(), $repository['url'])));
+                    $url = rtrim(implode('/', array($this->getRepositorydir(), $repository['url'])), '/');
+
+                    if (substr($url, -1) === '*') {
+                        $url = realpath(substr($url, 0, -1)) . '/*';
+                    } else {
+                        $url = realpath($url);
+                    }
+
                     if (!$url) {
                         throw new BuildException('Composer path repository URL not found: ' . $url);
                     }
