@@ -25,6 +25,7 @@ Currently deploy can be started only from a server.
 
 - Phing http://www.phing.info/
 - VersionControl_Git http://pear.php.net/package/VersionControl_Git
+- Composer https://getcomposer.org/ (optional, for composer based deployments)
 
 ### 2, Install
 
