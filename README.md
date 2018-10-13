@@ -91,7 +91,7 @@ application.releaseskept=20
 ;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
-scm.branch=stable
+scm.ref=tags/latest
 
 ;-- shared files --
 shared.files=vendor,app/config/parameters.yml,app/log.app/data
@@ -137,7 +137,7 @@ application.releaseskept=20
 ;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
-scm.branch=stable
+scm.ref=tags/latest
 
 ;-- shared files --
 shared.files=vendor,app/config/parameters.yml,app/log.app/data
@@ -245,7 +245,3 @@ application.run.init=ndeploy.base.shared,ndeploy.maintenance.init
 application.run.release=ndeploy.base.release
 application.run.after=ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove,ndeploy.base.application.post
 ```
-
-## TODO
-
-- [ ] Generate change log on deploy, like: git log --pretty=format:"%h - %an: %s"

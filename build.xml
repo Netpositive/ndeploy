@@ -47,7 +47,7 @@
 
     <!-- scm config -->
     <property name="scm.type" value="git" override="false" />
-    <property name="scm.branch" value=""  override="false" />
+    <property name="scm.ref" value="origin/master"  override="false" />
     <property name="scm.repository" value="" override="false" />
 
     <!-- shared config -->
