@@ -30,10 +30,10 @@
 
         <if>
             <not>
-                <equals arg1="${scm.branch}" arg2="" />
+                <equals arg1="${scm.ref}" arg2="" />
             </not>
             <then>
-                <svnupdate todir="${application.repositorydir}" revision="${scm.branch}"/>
+                <svnupdate todir="${application.repositorydir}" revision="${scm.ref}"/>
             </then>
         </if>
 

@@ -15,7 +15,7 @@ application.releaseskept=100
 ;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
-scm.branch=stable
+scm.ref=tags/latest
 
 ;-- shared files --
 shared.files=vendor,app/config/parameters.yml,app/log.app/data

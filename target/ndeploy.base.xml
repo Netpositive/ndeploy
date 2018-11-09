@@ -199,13 +199,13 @@
         <echo msg="Welcome to ndeploy build.properties skeleton generator!" level="warning" />
 
         <input message="Deploy user (use empty string to disable user check)" promptChar=":" propertyName="config.ndeploy.user" />
-        <input message="Application name" promptChar="?" propertyName="config.application.name" />
-        <input message="Application basedir" promptChar="?" propertyName="config.basedir" defaultValue="${application.startdir}"/>
-        <input message="Application framework " promptChar="?" propertyName="config.application.framework" validArgs="yii,symfony2,symfony," defaultValue="" />
-        <input message="Releases kept" promptChar="?" propertyName="application.releaseskept" defaultValue="100" />
-        <input message="SCM type " promptChar="?" propertyName="config.scm.type" validArgs="git,svn" defaultValue="git" />
-        <input message="SCM repository" promptChar="?" propertyName="config.scm.repository" />
-        <input message="Shared files" promptChar="?" propertyName="config.shared.files" />
+        <input message="Application name" promptChar=":" propertyName="config.application.name" />
+        <input message="Application basedir" promptChar=":" propertyName="config.basedir" defaultValue="${application.startdir}"/>
+        <input message="Application framework " promptChar=":" propertyName="config.application.framework" validArgs="yii,symfony2,symfony" defaultValue="" />
+        <input message="Releases kept" promptChar=":" propertyName="application.releaseskept" defaultValue="10" />
+        <input message="SCM type" promptChar=":" propertyName="config.scm.type" validArgs="git,svn" defaultValue="git" />
+        <input message="SCM repository" promptChar=":" propertyName="config.scm.repository" />
+        <input message="Shared files" promptChar=":" propertyName="config.shared.files" />
 
         <symlink target="${phing.file}" link="${config.basedir}/build.xml" />
 
@@ -264,7 +264,7 @@
         <phingcall target="ndeploy.version.config" />
         <phingcall target="ndeploy.lock.config" />
 
-        <input message="ndeploy lib" promptChar="?" propertyName="config.ndeploy.basedir" defaultValue="${phing.dir}"/>
+        <input message="ndeploy lib" promptChar=":" propertyName="config.ndeploy.basedir" defaultValue="${phing.dir}"/>
 
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";-- ndpeloy build target's basedir --${line.separator}" />

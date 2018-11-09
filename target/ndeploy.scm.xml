@@ -11,9 +11,20 @@
   -->
 
 <project name="ndeploy.scm" description="scm">
-
-    <property name="scm.branch" value="master" override="false" />
+    <property name="scm.branch" value="" override="false" />
+    <property name="scm.ref" value="master" override="false" />
     <property name="scm.innerpath" value="" override="false" />
+    <property name="scm.type" value="git" override="false" />
+
+    <if>
+        <not>
+            <equals arg1="${scm.branch}" arg2=""/>
+        </not>
+        <then>
+            <echo message="The 'scm.branch' property is deprecated. Please use 'scm.ref' instead." level="warning" />
+            <property name="scm.ref" value="${scm.branch}" override="true" />
+        </then>
+    </if>
 
     <import file="${ndeploy.basedir}/target/ndeploy.scm.${scm.type}.xml"/>
 
@@ -66,7 +77,7 @@
         <echo file="${config.propertyFileName}" append="true" message=";-- scm properties --${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="scm.type=${config.scm.type}${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="scm.repository=${config.scm.repository}${line.separator}" />
-        <echo file="${config.propertyFileName}" append="true" message=";scm.branch=master${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";scm.ref=master${line.separator}" />
     </target>
 
 </project>

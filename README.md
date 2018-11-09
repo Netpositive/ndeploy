@@ -8,6 +8,7 @@ Currently deploy can be started only from a server.
 ### Currently supported frameworks:
 - Symfony 2.0.x [vendors based]
 - Symfony 2.x [composer based]
+- Symfony 3.x
 - Symfony 1.4
 - Yii 1.1.x
 
@@ -23,8 +24,9 @@ Currently deploy can be started only from a server.
 
 ### 1, Dependencies
 
-- Phing http://www.phing.info/
-- VersionControl_Git http://pear.php.net/package/VersionControl_Git
+- Phing http://www.phing.info/ `e.g. apt-get install phing`
+- VersionControl_Git http://pear.php.net/package/VersionControl_Git `e.g. pear install VersionControl_Git-alpha`
+- Composer https://getcomposer.org/ (optional, for composer based deployments)
 
 ### 2, Install
 
@@ -91,7 +93,7 @@ application.releaseskept=20
 ;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
-scm.branch=stable
+scm.ref=tags/latest
 
 ;-- shared files --
 shared.files=vendor,app/config/parameters.yml,app/log.app/data
@@ -137,7 +139,7 @@ application.releaseskept=20
 ;-- scm properties --
 scm.type=git
 scm.repository=ssh://example@git.example.org/example.git
-scm.branch=stable
+scm.ref=tags/latest
 
 ;-- shared files --
 shared.files=vendor,app/config/parameters.yml,app/log.app/data
