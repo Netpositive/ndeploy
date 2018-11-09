@@ -14,6 +14,7 @@
     <property name="scm.branch" value="" override="false" />
     <property name="scm.ref" value="master" override="false" />
     <property name="scm.innerpath" value="" override="false" />
+    <property name="scm.type" value="git" override="false" />
 
     <if>
         <not>
