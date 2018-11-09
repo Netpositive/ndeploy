@@ -14,6 +14,7 @@
 
     <property name="scm.branch" value="master" override="false" />
     <property name="scm.innerpath" value="" override="false" />
+    <property name="scm.type" value="git" override="false" />
 
     <import file="${ndeploy.basedir}/target/ndeploy.scm.${scm.type}.xml"/>
 
