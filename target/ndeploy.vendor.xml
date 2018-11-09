@@ -14,7 +14,7 @@
 
     <taskdef classname="ComposerPathUpdateTask" name="composerpathupdate" classpath="${ndeploy.basedir}/class" />
 
-    <property name="vendor.composer.binary" value="${ndeploy.basedir}/bin/composer.phar" override="false" />
+    <property name="vendor.composer.binary" value="/usr/local/bin/composer" override="false" />
 
     <property name="vendor" value="" override="false" />
     <property name="vendor.command" value="" override="false" />

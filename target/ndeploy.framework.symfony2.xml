@@ -65,8 +65,8 @@
             <available file="${application.deploydir}/${application.framework.extra.symfony2.cache.dir}" type="dir" followSymlinks="true" />
             <then>
                 <echo msg="Remove everything from the cache directory." />
-                <exec dir="${application.releasesdir.latest}" command="rm -rf ${application.framework.extra.symfony2.cache.dir}/*" passthru="true" />
-                <exec dir="${application.releasesdir.latest}" command="chmod a+w ${application.framework.extra.symfony2.cache.dir}" passthru="true" />
+                <exec dir="${application.releasesdir.latest}" command="rm -rf ${application.framework.extra.symfony2.cache.dir}/*" passthru="true" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="chmod a+w ${application.framework.extra.symfony2.cache.dir}" passthru="true" checkreturn="true" />
             </then>
         </if>
     </target>
@@ -75,10 +75,10 @@
         <phingcall target="ndeploy.framework.symfony2.cache.clean" />
 
         <echo msg="Calling symfony's cache clear." />
-        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:clear --env=prod --no-debug" checkreturn="false" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:clear --env=prod --no-debug" checkreturn="false" passthru="true" />
 
         <echo msg="Cache warmup." />
-        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:warmup --env=prod --no-debug" checkreturn="true" />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} cache:warmup --env=prod --no-debug" checkreturn="true" passthru="true" />
     </target>
 
     <target name="ndeploy.framework.symfony2.assets.install">

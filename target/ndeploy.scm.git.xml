@@ -33,8 +33,20 @@
             </then>
         </if>
 
+        <property name="scm.phingtask.branchname" value="${scm.ref}" override="true" />
+
+        <!-- prefix the branchname with "origin/" to fallback in a backward compatible way -->
+        <if>
+            <not>
+                <contains substring="/" string="${scm.phingtask.branchname}" />
+            </not>
+            <then>
+                <property name="scm.phingtask.branchname" value="origin/${scm.phingtask.branchname}" override="true" />
+            </then>
+        </if>
+
         <gitfetch gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" all="true" prune="true" tags="true" force="true" />
-        <gitcheckout gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" branchname="origin/${scm.branch}" force="true" />
+        <gitcheckout gitPath="${scm.git.extra.path}" repository="${application.repositorydir}" branchname="${scm.phingtask.branchname}" force="true" />
 
         <gitlog gitPath="${scm.git.extra.path}" format="%h" maxCount="1" outputProperty="scm.hash" repository="${application.repositorydir}" />
         <gitdescribe gitPath="${scm.git.extra.path}" all="${scm.git.extra.describe.all}" tags="${scm.git.extra.describe.tags}" long="${scm.git.extra.describe.long}" always="1" outputProperty="scm.version" repository="${application.repositorydir}" />
