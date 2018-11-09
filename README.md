@@ -246,6 +246,16 @@ application.run.release=ndeploy.base.release
 application.run.after=ndeploy.vendor.init,ndeploy.framework.init,ndeploy.base.application,ndeploy.maintenance.remove,ndeploy.base.application.post
 ```
 
-## TODO
+## Development (of this tool)
 
-- [ ] Generate change log on deploy, like: git log --pretty=format:"%h - %an: %s"
+The easiest way is to start a docker container and mount the ndeploy source into it.
+
+```
+docker run --name ndpeloy-test --rm -it -v "$PWD":/opt/ndeploy -w /tmp debian bash
+```
+
+Install the required dependencies, then you're ready to play around with ndeploy.
+```
+apt-get update && apt-get install -y phing
+phing -f /opt/ndeploy/build.xml -q
+```

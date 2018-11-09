@@ -19,6 +19,9 @@
     <!-- run command -->
     <property name="ndeploy.start.command" value="init" override="false" />
 
+    <!-- deploying user -->
+    <property name="ndeploy.user" value="" override="false" />
+
     <!-- import all the targets -->
     <property name="ndeploy.basedir" value="${phing.dir}" override="false" />
     <import file="${ndeploy.basedir}/target/ndeploy.base.xml"/>
@@ -55,6 +58,19 @@
     <property name="shared.files" value="" />
 
     <target name="start">
+        <if>
+            <not><equals arg1="${ndeploy.user}" arg2="" /></not>
+            <then>
+                <exec command="whoami" outputProperty="running-user" checkreturn="true" />
+                <if>
+                    <not><equals arg1="${running-user}" arg2="${ndeploy.user}" /></not>
+                    <then>
+                        <echo level="error" msg="Deploy must be run as '${ndeploy.user}'. You tried to deploy as '${running-user}'." />
+                        <fail>Deploy must be run as '${ndeploy.user}'. You tried to deploy as '${running-user}'.</fail>
+                    </then>
+                </if>
+            </then>
+        </if>
         <phingcall target="${ndeploy.start.command}" />
     </target>
 
