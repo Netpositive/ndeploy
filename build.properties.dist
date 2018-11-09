@@ -1,6 +1,9 @@
 ;-- deploy basedir --
 basedir=/srv/example.org
 
+;-- deploy user --
+;ndeploy.user=www-data
+
 ;-- application --
 application.name=example
 application.framework=symfony2

@@ -48,7 +48,7 @@
                 </if>
             </then>
             <else>
-                <fail>Applicaiont repository dir (application.repositorydir) is not set.</fail>
+                <fail>Application repository dir (application.repositorydir) is not set.</fail>
             </else>
         </if>
 
@@ -79,7 +79,7 @@
     <target name="ndeploy.base.release.clean">
         <if>
             <not>
-                <equals arg1="${application.releaseskept" arg2="" />
+                <equals arg1="${application.releaseskept}" arg2="" />
             </not>
             <then>
                 <keeprelease keep="${application.releaseskept}">
@@ -198,6 +198,7 @@
     <target name="ndeploy.base.config">
         <echo msg="Welcome to ndeploy build.properties skeleton generator!" level="warning" />
 
+        <input message="Deploy user (use empty string to disable user check)" promptChar=":" propertyName="config.ndeploy.user" />
         <input message="Application name" promptChar=":" propertyName="config.application.name" />
         <input message="Application basedir" promptChar=":" propertyName="config.basedir" defaultValue="${application.startdir}"/>
         <input message="Application framework " promptChar=":" propertyName="config.application.framework" validArgs="yii,symfony2,symfony" defaultValue="" />
@@ -221,7 +222,7 @@
                         <delete file="${config.propertyFileName}" failonerror="true" />
                     </then>
                     <else>
-                        <fail>Property file allready exists!</fail>
+                        <fail>Property file already exists!</fail>
                     </else>
                 </if>
             </then>
@@ -232,6 +233,15 @@
         <echo file="${config.propertyFileName}" append="true" message=";-- deploy basedir --${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="basedir=${config.basedir}${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+
+        <if>
+            <not><equals arg1="${config.ndeploy.user}" arg2="" /></not>
+            <then>
+                <echo file="${config.propertyFileName}" append="true" message=";-- deploy user --${line.separator}" />
+                <echo file="${config.propertyFileName}" append="true" message="ndeploy.user=${config.ndeploy.user}${line.separator}" />
+                <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+            </then>
+        </if>
 
         <echo file="${config.propertyFileName}" append="true" message=";-- application --${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message="application.name=${config.application.name}${line.separator}" />
