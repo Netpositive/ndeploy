@@ -67,7 +67,7 @@ class ComposerPathUpdateTask extends Task
                     }
 
                     if (!$url) {
-                        throw new BuildException('Composer path repository URL not found: ' . $url);
+                        throw new BuildException('Composer path repository URL not found (using composer.json): ' . $url);
                     }
 
                     // Set the new url
@@ -110,7 +110,7 @@ class ComposerPathUpdateTask extends Task
 
                     $url = realpath(implode('/', array($this->getRepositorydir(), $package['dist']['url'])));
                     if (!$url) {
-                        throw new BuildException('Composer path repository URL not found: ' . $url);
+                        throw new BuildException('Composer path repository URL not found (using composer.lock): ' . $url);
                     }
 
                     // Set the new url
