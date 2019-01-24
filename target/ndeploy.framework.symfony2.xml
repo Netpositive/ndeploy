@@ -15,6 +15,7 @@
     <property name="application.framework.extra.symfony2.command" value="${php.binary} ./app/console" override="false" />
     <property name="application.framework.extra.symfony2.cache.dir" value="app/cache" override="false" />
     <property name="application.framework.extra.assetic.dump" value="true" override="false" />
+    <property name="application.framework.symfony2.assets.install" value="true" override="false" />
 
     <target name="ndeploy.framework.symfony2.init">
         <echo level="info" msg="Run symfony2 specific components." />
@@ -82,8 +83,13 @@
     </target>
 
     <target name="ndeploy.framework.symfony2.assets.install">
-        <echo msg="Installing assets." />
-        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} assets:install --env=prod --no-debug --symlink web" checkreturn="true" />
+        <if>
+            <istrue value="${application.framework.symfony2.assets.install}" />
+            <then>
+                <echo msg="Installing assets." />
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} assets:install --env=prod --no-debug --symlink web" checkreturn="true" />
+            </then>
+        </if>
     </target>
 
     <target name="ndeploy.framework.symfony2.assetic.dump">
@@ -102,6 +108,7 @@
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.ask=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assetic.dump=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.symfony2.assets.install=true${line.separator}" />
     </target>
 
 </project>
