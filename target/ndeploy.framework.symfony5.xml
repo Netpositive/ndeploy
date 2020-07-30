@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="/usr/share/php/data/phing/etc/phing-grammar.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0" ?>
+
+<project name="ndeploy.framework.symfony5">
+
+    <property name="application.framework.extra.symfony5.command" value="${php.binary} ./bin/console" override="false" />
+    <property name="application.framework.extra.symfony5.cache.dir" value="var/cache" override="false" />
+    <property name="application.framework.symfony5.assets.install" value="true" override="false" />
+
+    <target name="ndeploy.framework.symfony5.init">
+        <echo level="info" msg="Run symfony5 specific components." />
+
+        <phingcall target="ndeploy.framework.symfony5.migrate" />
+        <phingcall target="ndeploy.framework.symfony5.cache.warmup" />
+        <phingcall target="ndeploy.framework.symfony5.assets.install" />
+    </target>
+
+    <target name="ndeploy.framework.symfony5.migrate">
+        <if>
+            <istrue value="${application.framework.extra.migrate}"/>
+            <then>
+                <if>
+                    <istrue value="${application.framework.extra.migrate.ask}"/>
+                    <then>
+                        <echo msg="Checking doctrine migrations." />
+                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} doctrine:migrations:status" outputProperty="migration-versions" checkreturn="true" />
+                        <if>
+                            <contains string="${migration-versions}" substring="not migrated" />
+                            <then>
+                                <echo msg="Executing doctrine migrations." />
+                                <echo msg="${migration-versions}" />
+                                <input message="Migrate?" propertyname="migrate" validargs="y,n" defaultValue="y"/>
+                                <if>
+                                    <equals arg1="${migrate}" arg2="y"/>
+                                    <then>
+                                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                                    </then>
+                                </if>
+                            </then>
+                            <else>
+                                <echo msg="No migrations to execute."/>
+                            </else>
+                        </if>
+                    </then>
+                    <else>
+                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} doctrine:migrations:migrate --no-interaction" passthru="true" checkreturn="true" />
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony5.cache.clear">
+        <if>
+            <available file="${application.deploydir}/${application.framework.extra.symfony5.cache.dir}" type="dir" followSymlinks="true" />
+            <then>
+                <echo msg="Remove everything from the cache directory." />
+                <exec dir="${application.releasesdir.latest}" command="rm -rf ${application.framework.extra.symfony5.cache.dir}/*" passthru="true" checkreturn="true" />
+                <exec dir="${application.releasesdir.latest}" command="chmod a+w ${application.framework.extra.symfony5.cache.dir}" passthru="true" checkreturn="true" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony5.cache.warmup">
+        <phingcall target="ndeploy.framework.symfony5.cache.clear" />
+
+        <echo msg="Calling symfony's cache clear." />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} cache:clear --no-debug" checkreturn="false" passthru="true" />
+
+        <echo msg="Cache warmup." />
+        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} cache:warmup --no-debug" checkreturn="true" passthru="true" />
+    </target>
+
+    <target name="ndeploy.framework.symfony5.assets.install">
+        <if>
+            <istrue value="${application.framework.symfony5.assets.install}" />
+            <then>
+                <echo msg="Installing assets." />
+                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony5.command} assets:install --symlink" checkreturn="true" />
+            </then>
+        </if>
+    </target>
+
+    <target name="ndeploy.framework.symfony5.config">
+        <echo file="${config.propertyFileName}" append="true" message="${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";-- symfony5 framework properties --${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.ask=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.symfony5.assets.install=true${line.separator}" />
+    </target>
+
+</project>
