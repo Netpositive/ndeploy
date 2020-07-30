@@ -12,6 +12,7 @@
 
 <project name="ndeploy.framework">
 
+    <import file="${ndeploy.basedir}/target/ndeploy.framework.symfony5.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.framework.symfony2.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.framework.yii.xml"/>
     <import file="${ndeploy.basedir}/target/ndeploy.framework.symfony.xml"/>

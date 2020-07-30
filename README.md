@@ -6,9 +6,10 @@ Currently deploy can be started only from a server.
 ## Basics
 
 ### Currently supported frameworks:
-- Symfony 2.0.x [vendors based]
-- Symfony 2.x [composer based]
+- Symfony 5
 - Symfony 3.x
+- Symfony 2.x [composer based]
+- Symfony 2.0.x [vendors based]
 - Symfony 1.4
 - Yii 1.1.x
 

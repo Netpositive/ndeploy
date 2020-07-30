@@ -201,7 +201,7 @@
         <input message="Deploy user (use empty string to disable user check)" promptChar=":" propertyName="config.ndeploy.user" />
         <input message="Application name" promptChar=":" propertyName="config.application.name" />
         <input message="Application basedir" promptChar=":" propertyName="config.basedir" defaultValue="${application.startdir}"/>
-        <input message="Application framework " promptChar=":" propertyName="config.application.framework" validArgs="yii,symfony2,symfony" defaultValue="" />
+        <input message="Application framework " promptChar=":" propertyName="config.application.framework" validArgs="symfony5,symfony2,symfony,yii" defaultValue="" />
         <input message="Releases kept" promptChar=":" propertyName="application.releaseskept" defaultValue="10" />
         <input message="SCM type" promptChar=":" propertyName="config.scm.type" validArgs="git,svn" defaultValue="git" />
         <input message="SCM repository" promptChar=":" propertyName="config.scm.repository" />
