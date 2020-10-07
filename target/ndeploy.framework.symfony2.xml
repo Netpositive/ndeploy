@@ -34,7 +34,15 @@
                     <istrue value="${application.framework.extra.migrate.ask}"/>
                     <then>
                         <echo msg="Checking doctrine migrations." />
-                        <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
+                        <if>
+                            <equals arg1="${application.framework.extra.migrate.version}" arg2="3" />
+                            <then>
+                                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:list" outputProperty="migration-versions" checkreturn="true" />
+                            </then>
+                            <else>
+                                <exec dir="${application.releasesdir.latest}" command="${application.framework.extra.symfony2.command} doctrine:migrations:status --show-versions" outputProperty="migration-versions" checkreturn="true" />
+                            </else>
+                        </if>
                         <if>
                             <contains string="${migration-versions}" substring="not migrated" />
                             <then>
