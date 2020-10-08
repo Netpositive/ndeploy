@@ -115,6 +115,7 @@
         <echo file="${config.propertyFileName}" append="true" message=";-- symfony2 framework properties --${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.ask=true${line.separator}" />
+        <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.migrate.version=1${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.extra.assetic.dump=true${line.separator}" />
         <echo file="${config.propertyFileName}" append="true" message=";application.framework.symfony2.assets.install=true${line.separator}" />
     </target>
